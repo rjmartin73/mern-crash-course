@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import Product from "./models/product.model.js";
+import User from "./models/user.model.js";
 
 // Allows using .env configuration
 dotenv.config();
@@ -10,7 +11,7 @@ const app = express();
 
 app.use(express.json()); // middleware allows us to accept json in the req.body
 
-// GET
+// // GET
 app.get("/api/products", async (req, res) => {
   try {
     const products = await Product.find({});
@@ -41,6 +42,20 @@ app.post("/api/products", async (req, res) => {
   } catch (error) {
     console.error(`Error in Create product: ${error.message}`);
     res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+//UPDATE
+app.put("/api/products/:id", async (req, res) => {
+  const { id } = req.params;
+  const product = req.body;
+  console.log(id);
+
+  try {
+    await Product.findByIdAndUpdate(id, product);
+    res.status(200).json({ success: true, message: "Product updated" });
+  } catch (error) {
+    res.status(404).json({ success: false, message: "Product not found" });
   }
 });
 
