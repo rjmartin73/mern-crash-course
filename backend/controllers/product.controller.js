@@ -22,6 +22,12 @@ export const createProduct = async (req, res) => {
       .json({ success: false, message: "Please provide all fields" });
   }
 
+  if (!parseInt(product.price)) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Price must be a number" });
+  }
+
   const newProduct = new Product(product);
 
   try {
